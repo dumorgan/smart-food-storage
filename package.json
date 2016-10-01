@@ -1,0 +1,25 @@
+{
+  "name": "smart-food-storage",
+  "version": "1.0.0",
+  "description": "This repository contains files for the Smart Food Storage project for UFRJ's 2016.2 PI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dumorgan/smart-food-storage.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dumorgan/smart-food-storage/issues"
+  },
+  "homepage": "https://github.com/dumorgan/smart-food-storage#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "body-parser": "~1.0.1"
+  },
+  "devDependencies": {}
+}
