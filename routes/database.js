@@ -15,7 +15,8 @@ router.post('/users/create', function(req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
 
-  console.log(req.body)
+  console.log(req.body);
+  console.log(username);
   pg.connect(connectionString, function(err, client, done) {
     //Handle connection errors
     if (err) {
@@ -24,9 +25,9 @@ router.post('/users/create', function(req, res, next) {
       return res.status(500).json({sucess:false, data:err});
     }
     //SQL Query -> Insert user
-    client.query("INSERT INTO user (username,email,password) VALUES ($1,$2,$3)",[username,email,password]);
+    client.query("INSERT INTO \"Users\"(username,email,password) VALUES ($1,$2,$3)",[username,email,password]);
     //Select data
-    const query = client.query("SELECT * FROM user ORDER BY \"idUser\"");
+    const query = client.query("SELECT * FROM \"Users\" ORDER BY \"idUser\"");
     query.on('row', function(row) {
       results.push(row);
     });
