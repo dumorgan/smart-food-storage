@@ -6,7 +6,7 @@ const app = express();
 const fs = require('fs');
 const path = require('path');
 
-var routes = require('./routes/database')
+var routes = require('./routes/user')
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
