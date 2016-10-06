@@ -50,19 +50,41 @@ router.post('/login', function(req, res, next) {
       console.log(err);
       return res.status(500).json({sucess: false, data:err});
     }
-    client.query("SELECT password FROM \"Users\" where email=$1",[email], function(err, result) {
-
+    client.query("SELECT password,\"idUser\" FROM \"Users\" WHERE email=$1",[email], function(err, result) {
       if (err) {
         done();
         console.log(err);
       }
       done();
       if (triedPassword == result.rows[0].password) {
-        return res.json({'success':true});
+        return res.json({'success':true,'idUser':result.rows[0].idUser});
       }
       else {
         return res.json({'success':false});
       }
+    });
+  });
+});
+
+router.post('/products/add-new', function(req, res, next) {
+  const name = req.body.name;
+  const idUser = req.body.idUser;
+
+  console.log("Adding new product " + name + " to user " + idUser);
+
+  pg.connect(connectionString, function(err, client, done) {
+    if (err) {
+      done();
+      console.log(err);
+      return res.status(500).json({sucess: false, data: err});
+    }
+    var query = "INSERT INTO \"Products\" (name,\"idUser\") VALUES ($1,$2)";
+    client.query(query,[name,idUser], function(err, result) {
+      if (err) {
+        return res.json({sucess:false});
+      }
+      done();
+      return res.json({sucess:true});
     });
   });
 });
