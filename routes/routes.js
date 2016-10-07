@@ -15,27 +15,6 @@ router.post('/signup', function(req, res, next) {
   const password = req.body.password;
 
   console.log(req.body);
-  pg.connect(connectionString, function(err, client, done) {
-    //Handle connection errors
-    if (err) {
-      done();
-      console.log(err);
-      return res.status(500).json({sucess:false, data:err});
-    }
-    client.query("SELECT EXISTS(SELECT \"idUser\" FROM \"Users\" WHERE email=$1)",[email], function(err, result) {
-
-      if (!result.rows[0].exists) {
-        //SQL Query -> Insert user
-        client.query("INSERT INTO \"Users\"(email,password) VALUES ($1,$2) RETURNING \"idUser\"",[email,password], function(err, result) {
-          done();
-          return res.json({'success':true});
-        });
-      }
-      else {
-        return res.json({'sucess':false,'exists':true});
-      }
-    });
-  });
 })
 
 router.post('/login', function(req, res, next) {
@@ -70,23 +49,8 @@ router.post('/products/add-new', function(req, res, next) {
   const name = req.body.name;
   const idUser = req.body.idUser;
 
-  console.log("Adding new product " + name + " to user " + idUser);
+  controller.addProduct(req.body.name,req.body.idUser);
 
-  pg.connect(connectionString, function(err, client, done) {
-    if (err) {
-      done();
-      console.log(err);
-      return res.status(500).json({sucess: false, data: err});
-    }
-    var query = "INSERT INTO \"Products\" (name,\"idUser\") VALUES ($1,$2)";
-    client.query(query,[name,idUser], function(err, result) {
-      if (err) {
-        return res.json({sucess:false});
-      }
-      done();
-      return res.json({sucess:true});
-    });
-  });
 });
 
 module.exports = router;
