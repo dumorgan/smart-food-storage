@@ -1,9 +1,7 @@
-const express = require('express');
 const pg = require('pg');
 const path = require('path');
 const connectionString = "postgres://postgres:7921@localhost:5432/pi_db";
 const bodyParser = require('body-parser')
-const router = express.Router();
 
 
 //creates a user

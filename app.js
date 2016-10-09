@@ -6,12 +6,11 @@ const app = express();
 const fs = require('fs');
 const path = require('path');
 
-var routes = require('./routes/user')
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-app.use('/',routes)
+app.use('/',require('./controllers/controller'));
 
 /*
 app.use(function(req, res, next) {
