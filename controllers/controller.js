@@ -1,5 +1,6 @@
 var express = require('express');
 var User = require('./../models/user')
+var Product = require('./../models/product')
 const path = require('path');
 
 const bodyParser = require('body-parser')
@@ -17,8 +18,26 @@ router.post('/signup', function(req, res, next) {
   console.log(req.body);
 
   var user = new User(email,password);
-  var sucess = user.save();
-  return res.json({'sucess': sucess.toString()});
+  user.save(function(success,idUser) {
+    res.json({"success":success,"idUser":idUser});
+  })
+})
+
+
+
+/*************************************************************************
+                      PRODUCT RELATED ROUTES
+*************************************************************************/
+router.post('/products/add-new', function(req, res, next) {
+  var name = req.body.name;
+  var idUser = req.body.idUser;
+
+  console.log(req.body);
+
+  var product = new Product(name);
+  product.save(idUser, function(success) {
+    res.json({"success": success});
+  })
 })
 
 module.exports = router

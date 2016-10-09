@@ -8,7 +8,7 @@ var User = function(email,password) {
   this.password = password;
 }
 
-User.prototype.save = function() {
+User.prototype.save = function(callback) {
   var email = this.email
   var password = this.password
   pg.connect(connectionString, function(err, client, done) {
@@ -24,11 +24,11 @@ User.prototype.save = function() {
         //SQL Query -> Insert user
         client.query("INSERT INTO \"Users\"(email,password) VALUES ($1,$2) RETURNING \"idUser\"",[email,password], function(err, result) {
           done();
-          return true
+          callback(true,result.rows[0].idUser);
         });
       }
       else {
-        return false
+        callback(false);
       }
     });
   });
