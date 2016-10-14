@@ -44,6 +44,20 @@ router.post('/scales/add-new', function(req, res, next) {
     });
 });
 
+
+router.post('scales/add-measure', function(req, res, next) {
+  var mac = req.body.mac;
+  var amount = req.body.amount;
+  var timestamp = req.body.timestamp;
+
+  console.log("Adding measure to scale " + mac + " on " + timestamp)
+
+  var scale = new Scale(mac);
+  scale.addMeasure(amount,timestamp,function(sucess,idMeasure) {
+    res.json({"sucess":succes,"idMeasure":idMeasure});
+  });
+});
+
 /*************************************************************************
                       PRODUCT RELATED ROUTES
 *************************************************************************/
@@ -59,5 +73,9 @@ router.post('/products/add-new', function(req, res, next) {
     res.json({"success": success});
   })
 })
+
+router.post('products/bind-to-scale', function (req, res, next) {
+
+});
 
 module.exports = router

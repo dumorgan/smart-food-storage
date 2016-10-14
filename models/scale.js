@@ -34,6 +34,48 @@ var Scale = class Scale {
       });
     });
   }
+
+  findByMac(callback) {
+    var mac = this.mac;
+    pg.connect(connectionString, function(err, client, done) {
+      if (err) {
+        done();
+        console.log(err)
+      }
+      client.query("SELECT \"idScale\" FROM \"Scales\" WHERE mac=$1",[mac], function(err, result) {
+        if (err) {
+          done();
+          console.log(err);
+          callback(null);
+        }
+        callback(result.rows[0].idScale);
+      });
+    });
+  }
+
+  addMeasure(amount,timestamp,callback) {
+    var amount = amount;
+    var timestamp = timestamp;
+    this.findByMac(function(idScale) {
+      var idScale = idScale;
+      pg.connect(connectionString, function(err, client, done) {
+        if (err)  {
+          done();
+          console.log(err)
+          callback({sucess:false,data:err})
+        }
+        console.log(idScale,amount,idScale);
+        client.query("INSERT INTO \"Measures\" (\"idScale\",amount) VALUES ($1,$2,$3) RETURNING \"idMeasure\"",[idScale,amount], function(err, result) {
+          if(err) {
+            done();
+            console.log(err);
+            callback(false);
+          }
+          callback(true,result.rows[0].idMeasure)
+        })
+      });
+    });
+  }
 /*
   setWeight(timestamp,weight,callback) {
     var mac = this.mac;
