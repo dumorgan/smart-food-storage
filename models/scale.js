@@ -4,7 +4,9 @@ const pg = require('pg');
 
 var Scale = class Scale {
   constructor(mac) {
-    this.mac = mac;
+    if (mac != undefined) {
+      this.mac = mac;
+    }
   }
 
   createNew(idUser,callback) {
@@ -72,6 +74,28 @@ var Scale = class Scale {
           }
           callback(true,result.rows[0].idMeasure)
         });
+      });
+    });
+  }
+
+  getByUser(idUser, callback) {
+    pg.connect(connectionString, function(err, client, done) {
+      if (err) {
+        done();
+        console.log(err)
+      }
+
+      client.query("SELECT \"idScale\",mac FROM \"Scales\" WHERE \"idUser\"=$1",[idUser],function(err, result) {
+        if (err) {
+          done();
+          console.log(err);
+          callback(false);
+        }
+        var scales = []
+        for (var i = 0; i < result.rows.length; i++) {
+          scales.push({"idUser":result.rows[i].idScale,"mac":result.rows[i].mac});
+        }
+        callback(scales);
       });
     });
   }

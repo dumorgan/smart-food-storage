@@ -68,7 +68,35 @@ router.post('/scales/add-new', function(req, res, next) {
       });
     }
     else {
-      res.json({"success":true,"idScale":null})
+      res.json({"success":false})
+    }
+  });
+});
+
+//This route is for getting all scales from a given user
+//JSON params: idUser, authToken
+router.post('/scales/get', function(req, res, next) {
+
+  var idUser = req.body.idUser;
+  var authToken = req.body.authToken;
+  var user = new User(idUser);
+
+  user.authenticate(authToken, function (successfulAuth) {
+    if (successfulAuth) {
+      console.log("Getting scales from user " + idUser);
+      var scale = new Scale();
+
+      scale.getByUser(idUser, function(scales) {
+        if (scales.length > 0) {
+          res.json(scales);
+        }
+        else {
+          res.json({"scales":null})
+        }
+      });
+    }
+    else {
+      res.json({"success":false});
     }
   });
 });
@@ -89,15 +117,29 @@ router.post('/products/add-new', function(req, res, next) {
       console.log("Adding product " + " to user " + idUser)
       var product = new Product(name);
       product.save(idUser, function(success) {
-        res.json({"success": success});
+        res.json({"success":true});
       })
     }
     else {
       res.json({"success":false,"authentication":"failed"})
     }
   });
+});
 
-})
+
+/*************************************************************************
+                      SHIPMENT RELATED ROUTES
+*************************************************************************/
+router.post('/shipment/add-new', function(req, res, next) {
+
+  var name = req.body.name;
+  var idUser = req.body.idUser;
+  var authToken = req.body.authToken;
+  var expirationDate = req.body.expirationDate;
+  var totalPurchased = req.body.totalPurchased;
+  var scale = req.body.mac;
+
+});
 
 router.post('products/bind-to-scale', function (req, res, next) {
 
