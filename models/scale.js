@@ -64,15 +64,14 @@ var Scale = class Scale {
           console.log(err)
           callback({sucess:false,data:err})
         }
-        console.log(idScale,amount,idScale);
-        client.query("INSERT INTO \"Measures\" (\"idScale\",amount) VALUES ($1,$2,$3) RETURNING \"idMeasure\"",[idScale,amount], function(err, result) {
+        client.query("INSERT INTO \"Measures\" (\"idScale\",amount,timestamp) VALUES ($1,$2,$3) RETURNING \"idMeasure\"",[idScale,amount,timestamp], function(err, result) {
           if(err) {
             done();
             console.log(err);
             callback(false);
           }
           callback(true,result.rows[0].idMeasure)
-        })
+        });
       });
     });
   }

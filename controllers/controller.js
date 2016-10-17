@@ -20,11 +20,30 @@ router.post('/signup', function(req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
 
-  console.log(req.body);
+  var user = new User(email,password);
+  user.save(function(success,idUser,token_val) {
+    if (success) {
+      res.json({"success":success,"idUser":idUser,"authToken":token_val});
+    }
+    else {
+      res.json({"success":success})
+    }
+  });
+});
+
+//logs into the Server
+router.post('/login', function(req, res, next) {
+  var email = req.body.email;
+  var password = req.body.password;
 
   var user = new User(email,password);
-  user.save(function(success,idUser) {
-    res.json({"success":success,"idUser":idUser});
+  user.login(function(success,idUser,authToken) {
+    if (success) {
+      res.json({"success":success,"idUser":idUser,"authToken":authToken})
+    }
+    else {
+      res.json({"success":false,"idUser":null,"authToken":null})
+    }
   });
 });
 
@@ -33,19 +52,29 @@ router.post('/signup', function(req, res, next) {
 *************************************************************************/
 router.post('/scales/add-new', function(req, res, next) {
 
-    var idUser = req.body.idUser;
-    var mac = req.body.mac;
+  var idUser = req.body.idUser;
+  var mac = req.body.mac;
+  var authToken = req.body.authToken;
 
-    console.log("Adding scale to user " + idUser + " with MAC " + mac);
+  var user = new User(idUser);
 
-    var scale = new Scale(mac);
-    scale.createNew(idUser,function(success,idScale) {
-      res.json({"sucess":success,"idScale":idScale});
-    });
+  user.authenticate(authToken, function(successfulAuth) {
+    if (successfulAuth) {
+      console.log("Adding scale to user " + idUser + " with MAC " + mac);
+
+      var scale = new Scale(mac);
+      scale.createNew(idUser,function(success,idScale) {
+        res.json({"sucess":true,"idScale":idScale});
+      });
+    }
+    else {
+      res.json({"success":true,"idScale":null})
+    }
+  });
 });
 
 
-router.post('scales/add-measure', function(req, res, next) {
+router.post('/scales/add-measure', function(req, res, next) {
   var mac = req.body.mac;
   var amount = req.body.amount;
   var timestamp = req.body.timestamp;
@@ -53,8 +82,8 @@ router.post('scales/add-measure', function(req, res, next) {
   console.log("Adding measure to scale " + mac + " on " + timestamp)
 
   var scale = new Scale(mac);
-  scale.addMeasure(amount,timestamp,function(sucess,idMeasure) {
-    res.json({"sucess":succes,"idMeasure":idMeasure});
+  scale.addMeasure(amount, timestamp, function(success,idMeasure) {
+    res.json({"sucess":success,"idMeasure":idMeasure});
   });
 });
 
@@ -64,14 +93,23 @@ router.post('scales/add-measure', function(req, res, next) {
 router.post('/products/add-new', function(req, res, next) {
   var name = req.body.name;
   var idUser = req.body.idUser;
+  var authToken = req.body.authToken;
 
-  console.log("Adding product " + " to user " + idUser)
-  console.log(req.body);
+  var user = new User(idUser);
 
-  var product = new Product(name);
-  product.save(idUser, function(success) {
-    res.json({"success": success});
-  })
+  user.authenticate(authToken, function(successfulAuth) {
+    if (successfulAuth) {
+      console.log("Adding product " + " to user " + idUser)
+      var product = new Product(name);
+      product.save(idUser, function(success) {
+        res.json({"success": success});
+      })
+    }
+    else {
+      res.json({"success":false,"authentication":"failed"})
+    }
+  });
+
 })
 
 router.post('products/bind-to-scale', function (req, res, next) {
