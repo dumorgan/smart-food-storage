@@ -1,10 +1,11 @@
 var express = require('express');
-var User = require('./../models/user')
-var Product = require('./../models/product')
-var Scale = require('./../models/scale')
+var User = require('./../models/user');
+var Product = require('./../models/product');
+var Scale = require('./../models/scale');
+var Shipment = require('./../models/shipment');
 const path = require('path');
 
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 
 var router = express.Router();
 
@@ -126,20 +127,40 @@ router.post('/products/add-new', function(req, res, next) {
   });
 });
 
-
-/*************************************************************************
-                      SHIPMENT RELATED ROUTES
-*************************************************************************/
-router.post('/shipment/add-new', function(req, res, next) {
+router.post('/products/add-shipment', function(req, res, next) {
 
   var name = req.body.name;
+  var productName = req.body.productName;
   var idUser = req.body.idUser;
   var authToken = req.body.authToken;
   var expirationDate = req.body.expirationDate;
   var totalPurchased = req.body.totalPurchased;
-  var scale = req.body.mac;
+  var idScale = req.body.idScale;
 
+  var shipment = new Shipment(name,expirationDate);
+  var user = new User(idUser);
+
+  user.authenticate(authToken, function(successfulAuth) {
+    if (successfulAuth) {
+      shipment.save(idScale,name,idUser,function(success,idShipment) {
+        if (success) {
+          res.json({"success":true,"idShipment":idShipment});
+        }
+        else {
+          res.json({"success":false,"idShipment":idShipment});
+        }
+      });
+    }
+    else {
+      res.json({"success":false,"authentication":"failed"})
+    }
+  });
 });
+
+/*************************************************************************
+                      SHIPMENT RELATED ROUTES
+*************************************************************************/
+
 
 router.post('products/bind-to-scale', function (req, res, next) {
 
