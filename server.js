@@ -12,6 +12,8 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 
 app.use('/',require('./controllers/controller'));
 
+app.use('/mcu',require('./controllers/mcu_controller'));
+
 /*
 app.use(function(req, res, next) {
   var err = new Error('not found');
