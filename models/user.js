@@ -3,7 +3,7 @@
 var connectionString = "postgres://postgres:7921@localhost:5432/pi_db";
 var pg = require('pg');
 
-var randomString = require('randomString');
+var randomString = require('randomstring');
 
 var cryptoJS = require('crypto-js');
 
