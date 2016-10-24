@@ -1,3 +1,4 @@
+var port = process.env.PORT || 80;
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
@@ -13,6 +14,6 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 app.use('/',require('./controllers/controller'));
 app.use('/mcu',require('./controllers/mcu_controller'));
 
-app.listen(8080);
+app.listen(port);
 
-console.log("Server lifted on port 8080");
+console.log("Server lifted on port " + port); 

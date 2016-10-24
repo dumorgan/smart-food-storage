@@ -9,6 +9,9 @@ const bodyParser = require('body-parser');
 
 var router = express.Router();
 
+router.get('/',function(req, res, next) {
+  res.render('./../index.html')
+})
 
 /*************************************************************************
                       USER RELATED ROUTES
@@ -20,6 +23,8 @@ router.post('/signup', function(req, res, next) {
   //Grab data from http request
   const email = req.body.email;
   const password = req.body.password;
+
+  console.log(email,password)
 
   var user = new User(email,password);
   user.save(function(success,idUser,token_val) {

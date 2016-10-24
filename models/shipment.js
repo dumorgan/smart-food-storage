@@ -19,6 +19,7 @@ var Shipment = class Shipment {
 
       pg.connect(connectionString, function(err, client, done) {
         if (err) {
+          console.log(err);
           callback(err);
         }
         var expirationDate = this.expirationDate;
@@ -26,6 +27,7 @@ var Shipment = class Shipment {
         var sqlQuery = "INSERT INTO \"Shipments\" (\"expirationDate\",\"idScale\",\"idProduct\",\"idUser\",name) VALUES ($1,$2,$3,$4,$5) RETURNING \"idShipment\""
         client.query(sqlQuery,[expirationDate,idScale,idProduct,idUser,name],function(err, result) {
           if (err) {
+            console.log(err);
             callback(err);
           }
           callback(true,result.rows[0].idShipment);
