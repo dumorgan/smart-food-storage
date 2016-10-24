@@ -1,6 +1,6 @@
 "use strict";
-const connectionString = "postgres://postgres:7921@localhost:5432/pi_db";
-const pg = require('pg');
+var connectionString = "postgres://postgres:7921@localhost:5432/pi_db";
+var pg = require('pg');
 
 var Scale = class Scale {
   constructor(mac) {

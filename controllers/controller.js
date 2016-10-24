@@ -3,9 +3,9 @@ var User = require('./../models/user');
 var Product = require('./../models/product');
 var Scale = require('./../models/scale');
 var Shipment = require('./../models/shipment');
-const path = require('path');
+var path = require('path');
 
-const bodyParser = require('body-parser');
+var bodyParser = require('body-parser');
 
 var router = express.Router();
 
