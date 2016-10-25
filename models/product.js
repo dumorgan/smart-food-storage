@@ -1,7 +1,7 @@
 
 "use strict";
 
-var connectionString = "postgres://postgres:7921@localhost:5432/pi_db";
+var connectionString = "postgres://morgan:7921@localhost:5432/pi_db";
 var pg = require('pg');
 
 var Product = class Product {

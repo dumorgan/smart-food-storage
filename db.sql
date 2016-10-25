@@ -17,7 +17,7 @@ CREATE TABLE public."Measures"
   amount real,
   "timestamp" timestamp with time zone DEFAULT now(),
   "idScale" integer NOT NULL,
-  "idMeasure" integer NOT NULL DEFAULT nextval('"measure_idMeasure_seq"'::regclass),
+  "idMeasure" serial,
   CONSTRAINT "Measures_pkey" PRIMARY KEY ("idMeasure")
 )
 WITH (
@@ -30,7 +30,7 @@ ALTER TABLE public."Measures"
 CREATE TABLE public."Products"
 (
   name character(18),
-  "idProduct" integer NOT NULL DEFAULT nextval('"product_idProduct_seq"'::regclass),
+  "idProduct" serial,
   "idUser" integer,
   CONSTRAINT "Products_pkey" PRIMARY KEY ("idProduct")
 )
@@ -43,7 +43,7 @@ ALTER TABLE public."Products"
 CREATE TABLE public."Scales"
 (
   "idUser" integer NOT NULL,
-  "idScale" integer NOT NULL DEFAULT nextval('"scale_idScale_seq"'::regclass),
+  "idScale" serial,
   mac text,
   "currentWeight" real,
   CONSTRAINT "Scales_pkey" PRIMARY KEY ("idScale")
@@ -59,7 +59,7 @@ CREATE TABLE public."Shipments"
   "expirationDate" timestamp without time zone,
   "idProduct" integer NOT NULL,
   totalpurchased real,
-  "idShipment" integer NOT NULL DEFAULT nextval('good_idgood_seq'::regclass),
+  "idShipment" serial,
   "idScale" integer,
   "createdAt" timestamp with time zone DEFAULT now(),
   name text,
@@ -76,7 +76,7 @@ CREATE TABLE public."Users"
   username text,
   email text,
   password text,
-  "idUser" integer NOT NULL DEFAULT nextval('"user_idUser_seq"'::regclass),
+  "idUser" serial,
   CONSTRAINT "Users_pkey" PRIMARY KEY ("idUser")
 )
 WITH (

@@ -1,4 +1,4 @@
-var port = process.env.PORT || 80;
+var port = process.env.PORT || 8080;
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
@@ -16,4 +16,4 @@ app.use('/mcu',require('./controllers/mcu_controller'));
 
 app.listen(port);
 
-console.log("Server lifted on port " + port); 
+console.log("Server lifted on port " + port);
