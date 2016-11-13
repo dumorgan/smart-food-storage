@@ -3,6 +3,7 @@ var connectionString = "postgres://morgan:7921@localhost:5432/pi_db";
 var pg = require('pg');
 
 var Scale = class Scale {
+
   constructor(mac) {
     if (mac != undefined) {
       this.mac = mac;

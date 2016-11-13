@@ -17,6 +17,10 @@ router.get('/',function(req, res, next) {
                       USER RELATED ROUTES
 *************************************************************************/
 //creates a user
+/**
+params: email, password
+returns: success, idUser, authToken
+*/
 router.post('/signup', function(req, res, next) {
   const results = [];
 
@@ -38,6 +42,10 @@ router.post('/signup', function(req, res, next) {
 });
 
 //logs into the Server
+/**
+params: email, password
+returns: success, idUser, authToken
+*/
 router.post('/login', function(req, res, next) {
   var email = req.body.email;
   var password = req.body.password;
@@ -56,6 +64,10 @@ router.post('/login', function(req, res, next) {
 /*************************************************************************
                       SCALE RELATED ROUTES
 *************************************************************************/
+/**
+params: idUser, authToken, mac
+returns: success, idScale
+*/
 router.post('/scales/add-new', function(req, res, next) {
 
   var idUser = req.body.idUser;
@@ -80,7 +92,10 @@ router.post('/scales/add-new', function(req, res, next) {
 });
 
 //This route is for getting all scales from a given user
-//JSON params: idUser, authToken
+/**
+params: idUser, authToken, mac
+returns: scales (array with mac and idScale)
+*/
 router.post('/scales/get', function(req, res, next) {
 
   var idUser = req.body.idUser;
@@ -111,6 +126,10 @@ router.post('/scales/get', function(req, res, next) {
 /*************************************************************************
                       PRODUCT RELATED ROUTES
 *************************************************************************/
+/**
+params: idUser, authToken, name (name of the products)
+returns: success
+*/
 router.post('/products/add-new', function(req, res, next) {
   var name = req.body.name;
   var idUser = req.body.idUser;
@@ -132,6 +151,18 @@ router.post('/products/add-new', function(req, res, next) {
   });
 });
 
+
+/**
+params: idUser
+authToken
+productName (name of the product)
+name - name of the shipment (can be different than that of the product)
+expirationDate - string in the format yy-mm-dd hh:mm:ss
+totalPurchased
+idScale
+
+returns: success, idShipment
+*/
 router.post('/products/add-shipment', function(req, res, next) {
 
   var name = req.body.name;
