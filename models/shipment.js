@@ -14,6 +14,8 @@ var Shipment = class Shipment {
 
   save(idScale,name,productName,idUser,callback) {
     var product = new Product(productName);
+    var expirationDate = this.expirationDate;
+    var name = this.name;
 
     product.getId(idUser, function(idProduct) {
 
@@ -22,8 +24,6 @@ var Shipment = class Shipment {
           console.log(err);
           callback(err);
         }
-        var expirationDate = this.expirationDate;
-        var name = this.name;
         var sqlQuery = "INSERT INTO \"Shipments\" (\"expirationDate\",\"idScale\",\"idProduct\",\"idUser\",name) VALUES ($1,$2,$3,$4,$5) RETURNING \"idShipment\""
         client.query(sqlQuery,[expirationDate,idScale,idProduct,idUser,name],function(err, result) {
           if (err) {
