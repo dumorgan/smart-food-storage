@@ -12,10 +12,10 @@ var Shipment = class Shipment {
     this.expirationDate = expirationDate;
   }
 
-  save(idScale,productName,idUser,callback) {
-    var Product = new Product(productName);
+  save(idScale,name,productName,idUser,callback) {
+    var product = new Product(productName);
 
-    Product.getId(idUser, function(idProduct) {
+    product.getId(idUser, function(idProduct) {
 
       pg.connect(connectionString, function(err, client, done) {
         if (err) {
