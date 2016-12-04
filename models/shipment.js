@@ -24,8 +24,8 @@ var Shipment = class Shipment {
           console.log(err);
           callback(err);
         }
-        var sqlQuery = "INSERT INTO \"Shipments\" (\"expirationDate\",\"idScale\",\"idProduct\",\"idUser\",name) VALUES ($1,$2,$3,$4,$5) RETURNING \"idShipment\""
-        client.query(sqlQuery,[expirationDate,idScale,idProduct,idUser,name],function(err, result) {
+        var sqlQuery = "INSERT INTO \"Shipments\" (\"expirationDate\",\"idScale\",\"idProduct\",name) VALUES ($1,$2,$3,$4) RETURNING \"idShipment\""
+        client.query(sqlQuery,[expirationDate,idScale,idProduct,name],function(err, result) {
           if (err) {
             console.log(err);
             callback(err);
