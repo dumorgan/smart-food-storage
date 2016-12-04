@@ -178,7 +178,7 @@ router.post('/products/add-shipment', function(req, res, next) {
 
   user.authenticate(authToken, function(successfulAuth) {
     if (successfulAuth) {
-      shipment.save(idScale,name,idUser,function(success,idShipment) {
+      shipment.save(idScale,name,productName,idUser,function(success,idShipment) {
         if (success) {
           res.json({"success":true,"idShipment":idShipment});
         }
