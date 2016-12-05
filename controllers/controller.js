@@ -70,7 +70,7 @@ router.post('/users/products/get-amount', function(req, res, next) {
 
   user.authenticate(authToken, function(successfulAuth) {
     if (successfulAuth) {
-      user.getAllFromUser(function(err, result) {
+      user.getProducts(function(err, result) {
         if (err) {
           console.log(err);
           callback(err);
