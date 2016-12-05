@@ -149,7 +149,8 @@ var User = class User {
           }
           else {
             var productList = [];
-            result.rows.forEach(product => {
+            for (var i = 0; i < result.rows.length; i++) {
+              var product = result.rows[i];
               console.log("Product id: " + product.idProduct);
               var idProduct = product.idProduct;
               client.query('SELECT sum(amount) as current FROM "Measures" WHERE (timestamp,"idScale") IN(' +
@@ -198,7 +199,7 @@ var User = class User {
 
                               }
                             });
-            });
+            }
             callback(false,productList);
           }
         })
