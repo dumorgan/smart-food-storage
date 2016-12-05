@@ -132,6 +132,51 @@ var User = class User {
       });
     });
   }
+
+  getProducts(callback) {
+    var idUser = this.idUser;
+    pg.connect(connectionString, function(err, client, done) {
+      if (err) {
+        done();
+        console.log(err);
+        callback({success:false, data:err});
+      }
+      else {
+        client.query('SELECT "idProduct" FROM "Products" WHERE "idUser" = $1', [idUser], function(err, result) {
+          if (err) {
+            console.log(err);
+            done();
+          }
+          else {
+            var productList = [];
+            result.rows.forEach(product => {
+              console.log("Product id: " + product.idProduct);
+              var idProduct = product.idProduct;
+              client.query('SELECT sum(amount) FROM "Measures" WHERE (timestamp,"idScale") IN(' +
+                            'SELECT max(timestamp),s."idScale" FROM ' +
+                            '"Measures" m INNER JOIN "Scales" s ON m."idScale" = s."idScale" '+
+                            'WHERE s."idScale" IN (' +
+                            'SELECT s."idScale" FROM "Products" p ' +
+                            'INNER JOIN "Shipments" sh ON p."idProduct" = sh."idProduct" ' +
+                            'INNER JOIN "Scales" s ON sh."idScale" = s."idScale" ' +
+                            'WHERE p."idProduct" = $1) ' +
+                            'GROUP BY s."idScale")',[idProduct], function(err, result) {
+                              if (err) {
+                                console.log(err);
+                                callback({error: err});
+                              }
+                              else {
+                                console.log(result.rows[0]);
+                                productList.push({idProduct: idProduct, amount: result.rows[0]})
+                              }
+                            });
+            });
+            callback(false,productList);
+          }
+        })
+      }
+    });
+  }
 }
 
 module.exports = User;

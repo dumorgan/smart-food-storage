@@ -61,6 +61,28 @@ router.post('/login', function(req, res, next) {
   });
 });
 
+router.post('/users/products/get-amount', function(req, res, next) {
+  var idUser;
+  var authToken;
+
+  var user = new User(idUser);
+  var product = new Product();
+
+  user.authenticate(authToken, function(successfulAuth) {
+    if (successfulAuth) {
+      user.getAllFromUser(function(err, result) {
+        if (err) {
+          console.log(err);
+          callback(err);
+        }
+        else {
+          callback(result);
+        }
+      })
+    }
+  })
+})
+
 /*************************************************************************
                       SCALE RELATED ROUTES
 *************************************************************************/
@@ -192,6 +214,7 @@ router.post('/products/add-shipment', function(req, res, next) {
     }
   });
 });
+
 
 /*************************************************************************
                       SHIPMENT RELATED ROUTES
