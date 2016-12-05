@@ -62,8 +62,8 @@ router.post('/login', function(req, res, next) {
 });
 
 router.post('/users/products/get-amount', function(req, res, next) {
-  var idUser;
-  var authToken;
+  var idUser = req.body.idUser;
+  var authToken = req.body.authToken;
 
   var user = new User(idUser);
   var product = new Product();
