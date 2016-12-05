@@ -152,7 +152,7 @@ var User = class User {
             result.rows.forEach(product => {
               console.log("Product id: " + product.idProduct);
               var idProduct = product.idProduct;
-              client.query('SELECT sum(amount) FROM "Measures" WHERE (timestamp,"idScale") IN(' +
+              client.query('SELECT sum(amount) as current FROM "Measures" WHERE (timestamp,"idScale") IN(' +
                             'SELECT max(timestamp),s."idScale" FROM ' +
                             '"Measures" m INNER JOIN "Scales" s ON m."idScale" = s."idScale" '+
                             'WHERE s."idScale" IN (' +
@@ -166,8 +166,36 @@ var User = class User {
                                 callback({error: err});
                               }
                               else {
+                                var current = result.rows[0].current;
                                 console.log(result.rows[0]);
-                                productList.push({idProduct: idProduct, amount: result.rows[0]})
+                                client.query('SELECT SUM(totalpurchased) as purchased FROM "Shipments" WHERE "idProduct"=$1',[idProduct], function(err, result) {
+                                  if (err) {
+                                    console.log(err);
+                                    callback({error: err});
+                                  }
+                                  else {
+                                    var purchased = result.rows[0].purchased;
+                                    var ratio = current/purchased;
+                                    var indicator;
+                                    if (ratio >= 0.8) {
+                                      indicator = 5;
+                                    }
+                                    else if (ratio < 0.8 && ratio >= 0.6) {
+                                      indicator = 4;
+                                    }
+                                    else if (ratio < 0.6 && ratio >= 0.4) {
+                                      indicator = 3
+                                    }
+                                    else if (ratio < 0.4 && ratio >= 0.2) {
+                                      indicator = 2
+                                    }
+                                    else {
+                                      indicator = 1
+                                    }
+                                    productList.push({idProduct: idProduct, indicator: indicator});
+                                  }
+                                });
+
                               }
                             });
             });
