@@ -73,10 +73,10 @@ router.post('/users/products/get-amount', function(req, res, next) {
       user.getProducts(function(err, result) {
         if (err) {
           console.log(err);
-          callback(err);
+          res.json({error:err});
         }
         else {
-          callback(result);
+          res.json(result);
         }
       })
     }
