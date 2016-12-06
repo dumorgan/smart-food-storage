@@ -193,14 +193,14 @@ router.post('/products/add-shipment', function(req, res, next) {
   var authToken = req.body.authToken;
   var expirationDate = req.body.expirationDate;
   var totalPurchased = req.body.totalPurchased;
-  var idScale = req.body.idScale;
+  var mac = req.body.mac;
 
   var shipment = new Shipment(name,expirationDate);
   var user = new User(idUser);
 
   user.authenticate(authToken, function(successfulAuth) {
     if (successfulAuth) {
-      shipment.save(idScale,name,productName,idUser,function(success,idShipment) {
+      shipment.save(mac,name,productName,idUser,function(success,idShipment) {
         if (success) {
           res.json({"success":true,"idShipment":idShipment});
         }

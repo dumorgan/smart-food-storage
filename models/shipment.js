@@ -12,7 +12,7 @@ var Shipment = class Shipment {
     this.expirationDate = expirationDate;
   }
 
-  save(idScale,name,productName,idUser,callback) {
+  save(mac,name,productName,idUser,callback) {
     var product = new Product(productName);
     var expirationDate = this.expirationDate;
     var name = this.name;
@@ -24,13 +24,22 @@ var Shipment = class Shipment {
           console.log(err);
           callback(err);
         }
-        var sqlQuery = "INSERT INTO \"Shipments\" (\"expirationDate\",\"idScale\",\"idProduct\",name) VALUES ($1,$2,$3,$4) RETURNING \"idShipment\""
-        client.query(sqlQuery,[expirationDate,idScale,idProduct,name],function(err, result) {
+        client.quer('SELECT "idScale" FROM "SCALES" WHERE mac=$1',[mac],function (err, result) {
           if (err) {
             console.log(err);
             callback(err);
           }
-          callback(true,result.rows[0].idShipment);
+          else {
+            var idScale = result.rows[0].idScale;
+            var sqlQuery = "INSERT INTO \"Shipments\" (\"expirationDate\",\"idScale\",\"idProduct\",name) VALUES ($1,$2,$3,$4) RETURNING \"idShipment\""
+            client.query(sqlQuery,[expirationDate,idScale,idProduct,name],function(err, result) {
+              if (err) {
+                console.log(err);
+                callback(err);
+              }
+              callback(true,result.rows[0].idShipment);
+            });
+          }
         });
       });
     });
