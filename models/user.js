@@ -142,7 +142,7 @@ var User = class User {
         callback({success:false, data:err});
       }
       else {
-        client.query('SELECT "idProduct" FROM "Products" WHERE "idUser" = $1', [idUser], function(err, result) {
+        client.query('SELECT "idProduct" FROM "Products" WHERE "idUser" = $1 ORDER BY "idProduct"', [idUser], function(err, result) {
           if (err) {
             console.log(err);
             done();
@@ -150,8 +150,11 @@ var User = class User {
           else {
             var productList = [];
             var ids = result.rows[0].idProduct;
+            var pIds = [];
+            pIds.push(result.rows[0].idProduct);
             for (var i = 1; i < result.rows.length; i++) {
               ids = ids + ',' + result.rows[i].idProduct;
+              pIds.push(result.rows[i].idProduct);
             }
         //    var product = result.rows[i];
       //      console.log("Product id: " + product.idProduct);
@@ -165,7 +168,7 @@ var User = class User {
                           'SELECT s."idScale" FROM "Products" p ' +
                           'INNER JOIN "Shipments" sh ON p."idProduct" = sh."idProduct" ' +
                           'INNER JOIN "Scales" s ON sh."idScale" = s."idScale" ' +
-                          'WHERE p."idProduct" IN (' + ids + ') ) ' +
+                          'WHERE p."idProduct" IN (' + ids + ') ORDER BY "p.idProduct") ' +
                           'GROUP BY s."idScale")', function(err, result) {
                             if (err) {
                               console.log(err);
@@ -190,7 +193,7 @@ var User = class User {
                                 else {
                                   indicator = 1
                                 }
-                                productList.push({idProduct: idProduct, indicator: indicator});
+                                productList.push({idProduct: pIds[j], indicator: indicator});
                               }
                               callback(false,productList)
                             }
