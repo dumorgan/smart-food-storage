@@ -149,27 +149,31 @@ var User = class User {
           }
           else {
             var productList = [];
-            for (var i = 0; i < result.rows.length; i++) {
-              var product = result.rows[i];
-              console.log("Product id: " + product.idProduct);
-              var idProduct = product.idProduct;
-              client.query('SELECT sum(amount)/sum(totalpurchased) as ratio '+
-                            'FROM "Measures" m ' +
-                            'INNER JOIN "Shipments" s ON m."idScale"=s."idScale" WHERE (timestamp,m."idScale") IN(' +
-                            'SELECT max(timestamp),s."idScale" FROM ' +
-                            '"Measures" m INNER JOIN "Scales" s ON m."idScale" = s."idScale" '+
-                            'WHERE s."idScale" IN (' +
-                            'SELECT s."idScale" FROM "Products" p ' +
-                            'INNER JOIN "Shipments" sh ON p."idProduct" = sh."idProduct" ' +
-                            'INNER JOIN "Scales" s ON sh."idScale" = s."idScale" ' +
-                            'WHERE p."idProduct" = $1) ' +
-                            'GROUP BY s."idScale")',[idProduct], function(err, result) {
-                              if (err) {
-                                console.log(err);
-                                callback({error: err});
-                              }
-                              else {
-                                var ratio = result.rows[0].ratio;
+            var ids = result.rows[0].idProduct;
+            for (var i = 1; i < result.rows.length; i++) {
+              ids = ids + ',' + result.rows[i].idProduct;
+            }
+            var product = result.rows[i];
+            console.log("Product id: " + product.idProduct);
+            var idProduct = product.idProduct;
+            client.query('SELECT sum(amount)/sum(totalpurchased) as ratio '+
+                          'FROM "Measures" m ' +
+                          'INNER JOIN "Shipments" s ON m."idScale"=s."idScale" WHERE (timestamp,m."idScale") IN(' +
+                          'SELECT max(timestamp),s."idScale" FROM ' +
+                          '"Measures" m INNER JOIN "Scales" s ON m."idScale" = s."idScale" '+
+                          'WHERE s."idScale" IN (' +
+                          'SELECT s."idScale" FROM "Products" p ' +
+                          'INNER JOIN "Shipments" sh ON p."idProduct" = sh."idProduct" ' +
+                          'INNER JOIN "Scales" s ON sh."idScale" = s."idScale" ' +
+                          'WHERE p."idProduct" IN (' + ids + ') ) ' +
+                          'GROUP BY s."idScale")', function(err, result) {
+                            if (err) {
+                              console.log(err);
+                              callback({error: err});
+                            }
+                            else {
+                              for (var j = 0; j < result.rows.length; j++) {
+                                var ratio = result.rows[j].ratio;
                                 var indicator;
                                 if (ratio >= 0.8) {
                                   indicator = 5;
@@ -188,10 +192,8 @@ var User = class User {
                                 }
                                 productList.push({idProduct: idProduct, indicator: indicator});
                               }
-                          });
-            }
-            console.log(productList)
-            callback(false,productList);
+                            }
+                        });
           }
         });
       }
