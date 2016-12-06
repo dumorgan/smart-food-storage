@@ -50,8 +50,9 @@ save(idUser, callback) {
           console.log(err);
           callback(err);
         }
-        done();
-        callback(result.rows[0].idProduct);
+        else {
+          callback(result.rows[0].idProduct);
+        }
       });
     });
   }
