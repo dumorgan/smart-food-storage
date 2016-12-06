@@ -71,9 +71,11 @@ var Scale = class Scale {
           if(err) {
             done();
             console.log(err);
-            callback(false);
+            callback(false,err);
           }
-          callback(true,result.rows[0].idMeasure)
+          else {
+            callback(true,result.rows[0].idMeasure);
+          }
         });
       });
     });

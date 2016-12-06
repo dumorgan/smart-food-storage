@@ -15,7 +15,12 @@ mcuRouter.post('/scales/add-measure', function(req, res, next) {
 
   var scale = new Scale(mac);
   scale.addMeasure(amount, timestamp, function(success,idMeasure) {
-    res.json({"success":success,"idMeasure":idMeasure});
+    if (success) {
+        res.json({"success":success,"idMeasure":idMeasure});
+    }
+    else {
+      res.json({"success":success,err})
+    }
   });
 });
 
