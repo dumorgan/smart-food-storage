@@ -153,8 +153,8 @@ var User = class User {
             for (var i = 1; i < result.rows.length; i++) {
               ids = ids + ',' + result.rows[i].idProduct;
             }
-            var product = result.rows[i];
-            console.log("Product id: " + product.idProduct);
+        //    var product = result.rows[i];
+      //      console.log("Product id: " + product.idProduct);
             var idProduct = product.idProduct;
             client.query('SELECT sum(amount)/sum(totalpurchased) as ratio '+
                           'FROM "Measures" m ' +
@@ -192,7 +192,7 @@ var User = class User {
                                 }
                                 productList.push({idProduct: idProduct, indicator: indicator});
                               }
-                              callback(productList)
+                              callback(false,productList)
                             }
                         });
           }
