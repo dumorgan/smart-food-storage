@@ -158,7 +158,7 @@ var User = class User {
             }
         //    var product = result.rows[i];
       //      console.log("Product id: " + product.idProduct);
-            var idProduct = product.idProduct;
+        //    var idProduct = product.idProduct;
             client.query('SELECT sum(amount)/sum(totalpurchased) as ratio '+
                           'FROM "Measures" m ' +
                           'INNER JOIN "Shipments" s ON m."idScale"=s."idScale" WHERE (timestamp,m."idScale") IN(' +
