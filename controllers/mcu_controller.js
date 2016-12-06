@@ -14,12 +14,12 @@ mcuRouter.post('/scales/add-measure', function(req, res, next) {
   console.log("Adding measure to scale " + mac + " on " + timestamp)
 
   var scale = new Scale(mac);
-  scale.addMeasure(amount, timestamp, function(success,idMeasure) {
+  scale.addMeasure(amount, timestamp, function(success,result) {
     if (success) {
-        res.json({"success":success,"idMeasure":idMeasure});
+        res.json({"success":success,"idMeasure":result});
     }
     else {
-      res.json({"success":success,err})
+      res.json({"success":success,"err":result})
     }
   });
 });
