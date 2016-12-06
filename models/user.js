@@ -192,6 +192,7 @@ var User = class User {
                                 }
                                 productList.push({idProduct: idProduct, indicator: indicator});
                               }
+                              callback(productList)
                             }
                         });
           }
