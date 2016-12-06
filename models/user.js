@@ -168,7 +168,7 @@ var User = class User {
                           'SELECT s."idScale" FROM "Products" p ' +
                           'INNER JOIN "Shipments" sh ON p."idProduct" = sh."idProduct" ' +
                           'INNER JOIN "Scales" s ON sh."idScale" = s."idScale" ' +
-                          'WHERE p."idProduct" IN (' + ids + ') ORDER BY "p.idProduct") ' +
+                          'WHERE p."idProduct" IN (' + ids + ') ORDER BY p."idProduct") ' +
                           'GROUP BY s."idScale")', function(err, result) {
                             if (err) {
                               console.log(err);
