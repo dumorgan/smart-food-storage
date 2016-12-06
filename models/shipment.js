@@ -25,7 +25,7 @@ var Shipment = class Shipment {
           callback(err);
         }
         else {
-          client.query('SELECT "idScale" FROM "SCALES" WHERE mac=$1',[mac],function (err, result) {
+          client.query('SELECT "idScale" FROM "Scales" WHERE mac=$1',[mac],function (err, result) {
             if (err) {
               console.log(err);
               callback(err);
