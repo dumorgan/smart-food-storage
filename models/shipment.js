@@ -24,23 +24,25 @@ var Shipment = class Shipment {
           console.log(err);
           callback(err);
         }
-        client.quer('SELECT "idScale" FROM "SCALES" WHERE mac=$1',[mac],function (err, result) {
-          if (err) {
-            console.log(err);
-            callback(err);
-          }
-          else {
-            var idScale = result.rows[0].idScale;
-            var sqlQuery = "INSERT INTO \"Shipments\" (\"expirationDate\",\"idScale\",\"idProduct\",name) VALUES ($1,$2,$3,$4) RETURNING \"idShipment\""
-            client.query(sqlQuery,[expirationDate,idScale,idProduct,name],function(err, result) {
-              if (err) {
-                console.log(err);
-                callback(err);
-              }
-              callback(true,result.rows[0].idShipment);
-            });
-          }
-        });
+        else {
+          client.query('SELECT "idScale" FROM "SCALES" WHERE mac=$1',[mac],function (err, result) {
+            if (err) {
+              console.log(err);
+              callback(err);
+            }
+            else {
+              var idScale = result.rows[0].idScale;
+              var sqlQuery = "INSERT INTO \"Shipments\" (\"expirationDate\",\"idScale\",\"idProduct\",name) VALUES ($1,$2,$3,$4) RETURNING \"idShipment\""
+              client.query(sqlQuery,[expirationDate,idScale,idProduct,name],function(err, result) {
+                if (err) {
+                  console.log(err);
+                  callback(err);
+                }
+                callback(true,result.rows[0].idShipment);
+              });
+            }
+          });
+        }
       });
     });
   }
