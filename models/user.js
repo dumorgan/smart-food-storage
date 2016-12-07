@@ -157,7 +157,7 @@ var User = class User {
             for (var i = 1; i < result.rows.length; i++) {
               ids = ids + ',' + result.rows[i].idProduct;
               pIds.push(result.rows[i].idProduct);
-              pds.push(result.rows[i].name);
+              names.push(result.rows[i].name);
             }
         //    var product = result.rows[i];
       //      console.log("Product id: " + product.idProduct);
