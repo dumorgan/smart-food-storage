@@ -142,7 +142,7 @@ var User = class User {
         callback({success:false, data:err});
       }
       else {
-        client.query('SELECT "idProduct" FROM "Products" WHERE "idUser" = $1 ORDER BY "idProduct"', [idUser], function(err, result) {
+        client.query('SELECT "idProduct" FROM "Products",name WHERE "idUser" = $1 ORDER BY "idProduct"', [idUser], function(err, result) {
           if (err) {
             console.log(err);
             done();
@@ -151,10 +151,13 @@ var User = class User {
             var productList = [];
             var ids = result.rows[0].idProduct;
             var pIds = [];
+            var names = [];
             pIds.push(result.rows[0].idProduct);
+            names.push(result.rows[0].name);
             for (var i = 1; i < result.rows.length; i++) {
               ids = ids + ',' + result.rows[i].idProduct;
               pIds.push(result.rows[i].idProduct);
+              pds.push(result.rows[i].name);
             }
         //    var product = result.rows[i];
       //      console.log("Product id: " + product.idProduct);
@@ -193,7 +196,7 @@ var User = class User {
                                 else {
                                   indicator = 1
                                 }
-                                productList.push({idProduct: pIds[j], indicator: indicator});
+                                productList.push({idProduct: pIds[j], indicator: indicator, name: names[j]});
                               }
                               callback(false,productList)
                             }
