@@ -1,7 +1,7 @@
 
 "use strict";
 
-var connectionString = "postgres://morgan:7921@localhost:5432/pi_db";
+var connectionString = "postgres://postgres:7921@localhost:5432/pi_db";
 var pg = require('pg');
 
 var Product = class Product {
@@ -19,17 +19,18 @@ save(idUser, callback) {
 
     pg.connect(connectionString, function(err, client, done) {
       if (err) {
-        done();
         console.log(err);
         return res.status(500).json({sucess: false, data: err});
       }
       var query = "INSERT INTO \"Products\" (name,\"idUser\") VALUES ($1,$2)";
       client.query(query,[name,idUser], function(err, result) {
         if (err) {
+          console.log("Error inserting product")
+          console.log(err);
           callback(false)
         }
         else {
-          done();
+          console.log("Succesfully inserted new product to user " + idUser);
           callback(true)
         }
       });

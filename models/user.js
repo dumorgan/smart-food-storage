@@ -1,6 +1,6 @@
 "use strict";
 
-var connectionString = "postgres://morgan:7921@localhost:5432/pi_db";
+var connectionString = "postgres://postgres:7921@localhost:5432/pi_db";
 var pg = require('pg');
 
 var randomString = require('randomstring');
@@ -105,6 +105,7 @@ var User = class User {
     var triedPassword = this.encryptPassword();
 
     pg.connect(connectionString, function(err, client, done)  {
+      console.log("Connected to db")
       if (err) {
         done();
         console.log(err);
@@ -142,12 +143,13 @@ var User = class User {
         callback({success:false, data:err});
       }
       else {
+        console.log("Passei aqui");
         client.query('SELECT "idProduct",name FROM "Products" WHERE "idUser" = $1 ORDER BY "idProduct"', [idUser], function(err, result) {
           if (err) {
             console.log(err);
-            done();
           }
           else {
+            console.log(result.rows);
             var productList = [];
             var ids = result.rows[0].idProduct;
             var pIds = [];
@@ -159,6 +161,7 @@ var User = class User {
               pIds.push(result.rows[i].idProduct);
               names.push(result.rows[i].name);
             }
+            console.log(ids);
         //    var product = result.rows[i];
       //      console.log("Product id: " + product.idProduct);
         //    var idProduct = product.idProduct;
@@ -178,27 +181,45 @@ var User = class User {
                               callback({error: err});
                             }
                             else {
-                              for (var j = 0; j < result.rows.length; j++) {
-                                var ratio = result.rows[j].ratio;
-                                var indicator;
-                                if (ratio >= 0.8) {
-                                  indicator = 5;
+                              if (result.rows[0].ratio) {
+                                console.log(result.rows);
+                                for (var j = 0; j < result.rows.length; j++) {
+                                  var ratio
+                                  if (result.rows[j].ratio) {
+                                    ratio = result.rows[j].ratio;
+                                  }
+                                  else {
+                                    ratio = -1;
+                                  }
+                                  var indicator;
+                                  if (ratio >= 0.8) {
+                                    indicator = 5;
+                                  }
+                                  else if (ratio < 0.8 && ratio >= 0.6) {
+                                    indicator = 4;
+                                  }
+                                  else if (ratio < 0.6 && ratio >= 0.4) {
+                                    indicator = 3;
+                                  }
+                                  else if (ratio < 0.4 && ratio >= 0.2) {
+                                    indicator = 2;
+                                  }
+                                  else if (ratio >=0 && ratio < 0.2) {
+                                    indicator = 1;
+                                  }
+                                  else {
+                                    indicator = 0;
+                                  }
+                                  productList.push({idProduct: pIds[j], indicator: indicator, name: names[j]});
                                 }
-                                else if (ratio < 0.8 && ratio >= 0.6) {
-                                  indicator = 4;
-                                }
-                                else if (ratio < 0.6 && ratio >= 0.4) {
-                                  indicator = 3
-                                }
-                                else if (ratio < 0.4 && ratio >= 0.2) {
-                                  indicator = 2
-                                }
-                                else {
-                                  indicator = 1
-                                }
-                                productList.push({idProduct: pIds[j], indicator: indicator, name: names[j]});
                               }
-                              callback(false,productList)
+                              else {
+                                console.log("No shipments yet, sending empty indicators");
+                                for (var j = 0; j < names.length; j++) {
+                                  productList.push({idProduct: pIds[j], indicator: 0, name: names[j]});
+                                }
+                              }
+                              callback(false,productList);
                             }
                         });
           }

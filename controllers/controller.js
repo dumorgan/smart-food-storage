@@ -33,6 +33,7 @@ router.post('/signup', function(req, res, next) {
   var user = new User(email,password);
   user.save(function(success,idUser,token_val) {
     if (success) {
+      console.log("New user " + idUser + " just signed up!");
       res.json({"success":success,"idUser":idUser,"authToken":token_val});
     }
     else {
@@ -50,12 +51,17 @@ router.post('/login', function(req, res, next) {
   var email = req.body.email;
   var password = req.body.password;
 
+  console.log(email,password);
+
   var user = new User(email,password);
   user.login(function(success,idUser,authToken) {
+    console.log("asdada")
     if (success) {
+      console.log("User " + idUser + " logged in");
       res.json({"success":success,"idUser":idUser,"authToken":authToken})
     }
     else {
+      console.log("Some user failed to login");
       res.json({"success":false,"idUser":null,"authToken":null})
     }
   });
@@ -65,6 +71,7 @@ router.post('/users/products/get-amount', function(req, res, next) {
   var idUser = req.body.idUser;
   var authToken = req.body.authToken;
 
+  console.log("Getting available products from user " + idUser);
   var user = new User(idUser);
   var product = new Product();
 
@@ -78,9 +85,12 @@ router.post('/users/products/get-amount', function(req, res, next) {
         else {
           res.json(result);
         }
-      })
+      });
     }
-  })
+    else {
+      res.json({"success": false, "error": "failed auth"});
+    }
+  });
 })
 
 /*************************************************************************
@@ -164,6 +174,7 @@ router.post('/products/add-new', function(req, res, next) {
       console.log("Adding product " + " to user " + idUser)
       var product = new Product(name);
       product.save(idUser, function(success) {
+        console.log("Just added a new product to user " + idUser);
         res.json({"success":true});
       })
     }
@@ -195,6 +206,10 @@ router.post('/products/add-shipment', function(req, res, next) {
   var totalPurchased = req.body.totalPurchased;
   var mac = req.body.mac;
 
+  console.log(req.body);
+
+  console.log("Adding shipment to user :" + idUser + " product: " + productName);
+
   var shipment = new Shipment(name,expirationDate);
   var user = new User(idUser);
 
@@ -202,14 +217,17 @@ router.post('/products/add-shipment', function(req, res, next) {
     if (successfulAuth) {
       shipment.save(mac,name,productName,idUser,function(success,idShipment) {
         if (success) {
+          console.log("Aqui")
           res.json({"success":true,"idShipment":idShipment});
         }
         else {
+          console.log("Nao la")
           res.json({"success":false,"idShipment":idShipment});
         }
       });
     }
     else {
+      console.log("Erro auth");
       res.json({"success":false,"authentication":"failed"})
     }
   });

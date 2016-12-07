@@ -1,6 +1,6 @@
 "use strict";
 
-var connectionString = "postgres://morgan:7921@localhost:5432/pi_db";
+var connectionString = "postgres://postgres:7921@localhost:5432/pi_db";
 var pg = require('pg');
 
 var Product = require('./product');
@@ -32,13 +32,16 @@ var Shipment = class Shipment {
             }
             else {
               var idScale = result.rows[0].idScale;
+              console.log(idScale);
               var sqlQuery = "INSERT INTO \"Shipments\" (\"expirationDate\",\"idScale\",\"idProduct\",name) VALUES ($1,$2,$3,$4) RETURNING \"idShipment\""
               client.query(sqlQuery,[expirationDate,idScale,idProduct,name],function(err, result) {
                 if (err) {
                   console.log(err);
                   callback(err);
                 }
-                callback(true,result.rows[0].idShipment);
+                else {
+                  callback(true,result.rows[0].idShipment);
+                }
               });
             }
           });
