@@ -142,7 +142,7 @@ var User = class User {
         callback({success:false, data:err});
       }
       else {
-        client.query('SELECT "idProduct" FROM "Products",name WHERE "idUser" = $1 ORDER BY "idProduct"', [idUser], function(err, result) {
+        client.query('SELECT "idProduct",name FROM "Products" WHERE "idUser" = $1 ORDER BY "idProduct"', [idUser], function(err, result) {
           if (err) {
             console.log(err);
             done();
